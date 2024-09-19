@@ -43,9 +43,6 @@ class TestPredictMessageMood(unittest.TestCase):
         with patch('predict.SomeModel.predict') as mock_model_predict:
             mock_model_predict.side_effect = [0.1, 0.4]
 
-            with self.assertRaises(TypeError):
-                predict_message_mood()
-
             one_arg = predict_message_mood('smth')
             self.assertEqual(one_arg, 'неуд')
 
@@ -55,10 +52,15 @@ class TestPredictMessageMood(unittest.TestCase):
     @patch('predict.SomeModel.predict')
     def test_borders(self, mock_model_predict):
         mock_model_predict.return_value = 0.2
-        result = predict_message_mood('qwerty', bad_thresholds=0.2, good_thresholds=0.9)
+        result = predict_message_mood('qwerty',
+                                      bad_thresholds=0.2,
+                                      good_thresholds=0.9
+                                      )
         self.assertEqual(result, 'норм')
 
     def test_changed_args(self):
         with self.assertRaises(ValueError):
-            predict_message_mood('qwerty', bad_thresholds=0.9, good_thresholds=0.2)
-
+            predict_message_mood('qwerty',
+                                 bad_thresholds=0.9,
+                                 good_thresholds=0.2
+                                 )

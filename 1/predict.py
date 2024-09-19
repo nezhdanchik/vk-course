@@ -3,6 +3,7 @@ import time
 
 class SomeModel:
     def predict(self, message: str) -> float:
+        print(f'start predicting with {message=}')
         time.sleep(3)
         return 999
 
@@ -19,7 +20,6 @@ def predict_message_mood(
     result = model.predict(message)
     if result < bad_thresholds:
         return "неуд"
-    elif result > good_thresholds:
+    if result > good_thresholds:
         return "отл"
-    else:
-        return "норм"
+    return "норм"
