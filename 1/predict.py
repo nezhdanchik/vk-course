@@ -7,6 +7,10 @@ class SomeModel:
         time.sleep(3)
         return 999
 
+    def some_method(self):
+        # pylint ругается на слишком малое количество методов
+        pass
+
 
 def predict_message_mood(
         message: str,
