@@ -1,10 +1,15 @@
+import os
 import unittest
 from file_filter import file_filter
 
 
 class TestFileFilter(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.file_text_path = os.path.join(os.path.dirname(__file__), 'text.txt')
+
     def test_one_word_at_line_without_stop(self):
-        with open('text.txt', encoding='utf-8') as file:
+        with open(self.file_text_path, encoding='utf-8') as file:
             gen = file_filter(file, ['цветов', 'все'], [])
             self.assertEqual(list(gen), [
                 'цветов Они были яркими и красочными',
@@ -14,7 +19,7 @@ class TestFileFilter(unittest.TestCase):
             ])
 
     def test_one_word_at_line_with_stop(self):
-        with open('text.txt', encoding='utf-8') as file:
+        with open(self.file_text_path, encoding='utf-8') as file:
             gen = file_filter(
                 file,
                 ['цветов', 'ромашки', 'догонялки'],
@@ -26,7 +31,7 @@ class TestFileFilter(unittest.TestCase):
             ])
 
     def test_many_words_at_line_without_stop(self):
-        with open('text.txt', encoding='utf-8') as file:
+        with open(self.file_text_path, encoding='utf-8') as file:
             gen = file_filter(
                 file,
                 ['цветов', 'они', 'зайчата', 'олени', 'траву'],
@@ -42,7 +47,7 @@ class TestFileFilter(unittest.TestCase):
             ])
 
     def test_many_words_at_line_with_stop(self):
-        with open('text.txt', encoding='utf-8') as file:
+        with open(self.file_text_path, encoding='utf-8') as file:
             gen = file_filter(
                 file,
                 ['цветов', 'они', 'зайчата', 'олени', 'траву'],
