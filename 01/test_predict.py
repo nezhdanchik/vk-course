@@ -58,6 +58,30 @@ class TestPredictMessageMood(unittest.TestCase):
                                       )
         self.assertEqual(result, 'норм')
 
+        mock_model_predict.return_value = 0.5
+        result = predict_message_mood('',
+                                      bad_thresholds=0.1,
+                                      good_thresholds=0.5)
+        self.assertEqual(result, 'норм')
+
+        mock_model_predict.return_value = 0.3
+        result = predict_message_mood('',
+                                      bad_thresholds=0.3000001,
+                                      good_thresholds=0.5)
+        self.assertEqual(result, 'неуд')
+
+        mock_model_predict.return_value = 0.5000000001
+        result = predict_message_mood('',
+                                      bad_thresholds=0.3,
+                                      good_thresholds=0.5)
+        self.assertEqual(result, 'отл')
+
+        mock_model_predict.return_value = 0.5
+        result = predict_message_mood('',
+                                      bad_thresholds=0.499999,
+                                      good_thresholds=0.5000001)
+        self.assertEqual(result, 'норм')
+
     def test_changed_args(self):
         with self.assertRaises(ValueError):
             predict_message_mood('qwerty',
