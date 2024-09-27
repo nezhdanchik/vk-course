@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
-
 from unittest.mock import patch
+
 from predict import predict_message_mood
 
 
