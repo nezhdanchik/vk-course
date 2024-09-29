@@ -1,6 +1,6 @@
 import io
 import unittest
-from unittest import TestCase, mock
+from unittest import mock
 
 from retry_decorator import retry_deco
 
@@ -15,13 +15,21 @@ class TestRetryDeco(unittest.TestCase):
         expected = []
 
         add(4, 2)
-        expected += ['run "add" with positional args = (4, 2), attempt = 1, result = 6\n']
+        expected += [
+            'run "add" with positional args = (4, 2), attempt = 1, result = 6\n'
+        ]
 
         add(4, b=3)
-        expected += ['''run "add" with positional args = (4,), keyword kwargs = {'b': 3}, attempt = 1, result = 7\n''']
+        expected += [
+            '''run "add" with positional args = (4,), '''
+            '''keyword kwargs = {'b': 3}, attempt = 1, result = 7\n'''
+        ]
 
         add(a=11, b=2)
-        expected += ['''run "add" with keyword kwargs = {'a': 11, 'b': 2}, attempt = 1, result = 13\n''']
+        expected += [
+            '''run "add" with keyword kwargs = {'a': 11, 'b': 2}, '''
+            '''attempt = 1, result = 13\n'''
+        ]
 
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
@@ -34,14 +42,20 @@ class TestRetryDeco(unittest.TestCase):
         expected = []
 
         division(10, 2)
-        expected += ['''run "division" with positional args = (10, 2), attempt = 1, result = 5.0\n''']
+        expected += [
+            '''run "division" with positional args = (10, 2), '''
+            '''attempt = 1, result = 5.0\n'''
+        ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
         division(0, 0)
         expected += [
-            '''run "division" with positional args = (0, 0), attempt = 1, exception = ZeroDivisionError\n''',
-            '''run "division" with positional args = (0, 0), attempt = 2, exception = ZeroDivisionError\n''',
-            '''run "division" with positional args = (0, 0), attempt = 3, exception = ZeroDivisionError\n''',
+            '''run "division" with positional args = (0, 0), '''
+            '''attempt = 1, exception = ZeroDivisionError\n''',
+            '''run "division" with positional args = (0, 0), '''
+            '''attempt = 2, exception = ZeroDivisionError\n''',
+            '''run "division" with positional args = (0, 0), '''
+            '''attempt = 3, exception = ZeroDivisionError\n''',
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
@@ -62,9 +76,12 @@ class TestRetryDeco(unittest.TestCase):
         three_calls('hello world')
 
         expected = [
-            '''run "three_calls" with positional args = ('hello world',), attempt = 1, exception = ValueError\n''',
-            '''run "three_calls" with positional args = ('hello world',), attempt = 2, exception = IndexError\n''',
-            '''run "three_calls" with positional args = ('hello world',), attempt = 3, result = hello world\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 1, exception = ValueError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 2, exception = IndexError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 3, result = hello world\n''',
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
@@ -85,8 +102,10 @@ class TestRetryDeco(unittest.TestCase):
         three_calls('hello world')
 
         expected = [
-            '''run "three_calls" with positional args = ('hello world',), attempt = 1, exception = ValueError\n''',
-            '''run "three_calls" with positional args = ('hello world',), attempt = 2, exception = IndexError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 1, exception = ValueError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 2, exception = IndexError\n''',
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
@@ -100,13 +119,15 @@ class TestRetryDeco(unittest.TestCase):
 
         check_int(value=1)
         expected = [
-            '''run "check_int" with keyword kwargs = {'value': 1}, attempt = 1, result = True\n'''
+            '''run "check_int" with keyword kwargs = {'value': 1}, '''
+            '''attempt = 1, result = True\n''',
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
         check_int(value=None)
         expected += [
-            '''run "check_int" with keyword kwargs = {'value': None}, attempt = 1, exception = ValueError\n'''
+            '''run "check_int" with keyword kwargs = {'value': None}, '''
+            '''attempt = 1, exception = ValueError\n'''
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
 
@@ -126,7 +147,9 @@ class TestRetryDeco(unittest.TestCase):
 
         three_calls('hello world')
         expected = [
-            '''run "three_calls" with positional args = ('hello world',), attempt = 1, exception = ValueError\n''',
-            '''run "three_calls" with positional args = ('hello world',), attempt = 2, exception = IndexError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 1, exception = ValueError\n''',
+            '''run "three_calls" with positional args = ('hello world',), '''
+            '''attempt = 2, exception = IndexError\n''',
         ]
         self.assertEqual(mock_stdout.getvalue(), ''.join(expected))
