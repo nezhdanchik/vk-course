@@ -15,7 +15,7 @@ def retry_deco(limit=1, exceptions=None):
                 log_attempt = log + f'attempt = {i}, '
                 try:
                     res = function(*args, **kwargs)
-                except Exception as err: # pylint: disable=broad-except
+                except Exception as err:  # pylint: disable=broad-except
                     err_type = err.__class__
                     print(log_attempt + f'exception = {err_type.__name__}')
                     if err_type in exceptions:
