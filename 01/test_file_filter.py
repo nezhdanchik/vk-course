@@ -130,3 +130,17 @@ class TestFileFilter(unittest.TestCase):
                            'оглядеться'],
                           ['песни', 'чтобы'])
         self.assertEqual(list(gen), [])
+
+    def test_one_line_one_word(self):
+        gen = file_filter(self.file_text_path, ['однобольшоеслово'], [])
+        self.assertEqual(list(gen), [
+            'однобольшоеслово',
+        ])
+
+        gen = file_filter(self.file_text_path, ['однобольшоеслово'],
+                          ['однобольшоеслово'])
+        self.assertEqual(list(gen), [])
+
+        gen = file_filter(self.file_text_path, ['однобольшоеслово', 'поляне'],
+                          ['однобольшоеслово'])
+        self.assertEqual(list(gen), ['В лесу на поляне росло много'])
