@@ -125,4 +125,4 @@ class TestCustomList(TestCase):
         self.assertEqual(str(CustomList([1, 2, 3])), '[1, 2, 3] Sum: 6')
         self.assertEqual(str(CustomList([3])), '[3] Sum: 3')
         self.assertEqual(str(CustomList()), '[] Sum: 0')
-        self.assertEqual(CustomList([-1, -2]).__str__(), '[-1, -2] Sum: -3')
+        self.assertEqual(str(CustomList([-1, -2])), '[-1, -2] Sum: -3')
