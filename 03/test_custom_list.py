@@ -14,12 +14,12 @@ class TestCustomList(TestCase):
             function(self, a, b, expected)
             # проверяем, что a изменились, а b не изменились
             if isinstance(before_a, CustomList):
-                self.assertTrue(before_a._eq_elements(a))
+                self.assertTrue(before_a.eq_elements(a))
             elif isinstance(before_a, list):
                 self.assertTrue(before_a == a)
 
             if isinstance(before_b, CustomList):
-                self.assertTrue(before_b._eq_elements(b))
+                self.assertTrue(before_b.eq_elements(b))
             elif isinstance(before_b, list):
                 self.assertTrue(before_b == b)
 
@@ -27,14 +27,14 @@ class TestCustomList(TestCase):
 
     @_was_changed_deco
     def change_sum(self, a, b, expected):
-        self.assertTrue(expected._eq_elements(a + b))
-        self.assertTrue(expected._eq_elements(b + a))
+        self.assertTrue(expected.eq_elements(a + b))
+        self.assertTrue(expected.eq_elements(b + a))
 
     @_was_changed_deco
     def change_sub(self, a, b, expected):
         diff_sign_expected = CustomList([-i for i in expected])
-        self.assertTrue(expected._eq_elements(a - b))
-        self.assertTrue(diff_sign_expected._eq_elements(b - a))
+        self.assertTrue(expected.eq_elements(a - b))
+        self.assertTrue(diff_sign_expected.eq_elements(b - a))
 
     def test_custom_list_operate(self):
         a = CustomList([5, 1, 3, 7])

@@ -6,7 +6,7 @@ class CustomList(list):
     def __add__(self, other):
         if isinstance(other, int):
             return CustomList([self[i] + other for i in range(len(self))])
-        elif isinstance(other, list):
+        if isinstance(other, list):
             min_length = min(len(self), len(other))
             result = CustomList()
             for i in range(min_length):
@@ -16,6 +16,7 @@ class CustomList(list):
             elif len(self) < len(other):
                 result.extend(other[min_length:])
             return result
+        raise NotImplementedError(f'Тип {type(other)} не поддерживается')
 
     __radd__ = __add__
 
@@ -43,8 +44,9 @@ class CustomList(list):
         return sum(self) == sum(other)
 
     # для тестов
-    def _eq_elements(self, other):
+    def eq_elements(self, other):
         return list(self) == list(other)
+
 
 a = CustomList([1, 2, 3])
 print(a + [1, 2])
