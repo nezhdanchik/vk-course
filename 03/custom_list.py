@@ -46,8 +46,3 @@ class CustomList(list):
     # для тестов
     def eq_elements(self, other):
         return list(self) == list(other)
-
-
-a = CustomList([1, 2, 3])
-print(a + [1, 2])
-print(a)
