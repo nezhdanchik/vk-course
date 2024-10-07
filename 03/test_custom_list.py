@@ -12,7 +12,7 @@ class TestCustomList(TestCase):
             before_a = copy.copy(a)
             before_b = copy.copy(b)
             function(self, a, b, expected)
-            # проверяем, что a изменились, а b не изменились
+            # проверяем, что а и b не изменились
             if isinstance(before_a, CustomList):
                 self.assertTrue(before_a.eq_elements(a))
             elif isinstance(before_a, list):
