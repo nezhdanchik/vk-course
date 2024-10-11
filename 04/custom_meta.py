@@ -5,7 +5,7 @@ class CustomMeta(type):
     '''
 
     @classmethod
-    def __prepare__(mcs, name, bases): # pylint: disable=unused-argument
+    def __prepare__(mcs, name, bases):  # pylint: disable=unused-argument
         def __getattribute__(self, item):
             if len(item) >= 4 and item[:2] == item[-2:] == '__':
                 return object.__getattribute__(self, item)

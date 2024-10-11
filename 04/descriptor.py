@@ -1,6 +1,6 @@
 class Base:
     def __set_name__(self, owner, name):
-        self._name = f'_hidden_{name}' # pylint: disable=W0201
+        self._name = f'_hidden_{name}'  # pylint: disable=W0201
 
     def __get__(self, instance, owner):
         if instance is None:

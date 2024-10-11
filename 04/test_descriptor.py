@@ -3,7 +3,7 @@ import pytest
 
 
 def test_name_no_params():
-    class Person: # pylint: disable=too-few-public-methods
+    class Person:  # pylint: disable=too-few-public-methods
         name = Name()
 
         def __init__(self, name):
@@ -30,7 +30,7 @@ def test_name_no_params():
 
 
 def test_name_max_length():
-    class Person: # pylint: disable=too-few-public-methods
+    class Person:  # pylint: disable=too-few-public-methods
         name = Name(max_length=15)
 
         def __init__(self, name):
@@ -47,7 +47,7 @@ def test_name_max_length():
 
 
 def test_positive_integer_strong():
-    class Person: # pylint: disable=too-few-public-methods
+    class Person:  # pylint: disable=too-few-public-methods
         age = PositiveInteger(strong=True)
 
         def __init__(self, age):
@@ -64,7 +64,7 @@ def test_positive_integer_strong():
 
 
 def test_positive_integer_not_strong():
-    class Person: # pylint: disable=too-few-public-methods
+    class Person:  # pylint: disable=too-few-public-methods
         age = PositiveInteger(strong=False)
 
         def __init__(self, age):
@@ -78,7 +78,7 @@ def test_positive_integer_not_strong():
 
 
 def test_phone():
-    class Person: # pylint: disable=too-few-public-methods
+    class Person:  # pylint: disable=too-few-public-methods
         phone = PnoneNumberRussia()
 
         def __init__(self, phone):
