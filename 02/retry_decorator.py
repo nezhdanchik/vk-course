@@ -1,4 +1,4 @@
-def retry_deco(limit=1, allowed_exceptions:list[Exception]|None=None):
+def retry_deco(limit=1, allowed_exceptions=None):
     if not allowed_exceptions:
         allowed_exceptions = []
 
