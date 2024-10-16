@@ -6,6 +6,8 @@ json может состоять из вложенных словарей.
 если встречается несколько вхождений токена в строку,
 учитываются только с разным регистром
 
+когда required_keys или tokens или callback равны None,
+выбрасывается ошибка ValueError
 '''
 
 import json
@@ -56,6 +58,13 @@ def process_json(
         tokens: list[str] | None = None,
         callback: Callable[[str, str], None] | None = None,
 ) -> None:
+    if required_keys is None:
+        raise ValueError('required_keys is None')
+    if tokens is None:
+        raise ValueError('tokens is None')
+    if callback is None:
+        raise ValueError('callback is None')
+
     parsed = json.loads(json_str)
     suitable_pairs = find_suitable_keys(parsed,
                                         required_keys=set(required_keys))
@@ -63,7 +72,6 @@ def process_json(
     for token in tokens:
         if token not in unique_tokens:
             unique_tokens.append(token)
-    tokens = unique_tokens
 
     for key, value in suitable_pairs:
-        process_value(key, value, tokens=tokens, callback=callback)
+        process_value(key, value, tokens=unique_tokens, callback=callback)

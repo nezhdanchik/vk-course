@@ -75,8 +75,24 @@ class TestFindSuitableKeys(TestCase):
             ('subsub', 'word1 word3'),
         ]
         r = find_suitable_keys(d, required_keys)
-        print(f'{expected=} {r=}')
         self.assertEqual(r, expected)
+
+    def test_empty_keys(self):
+        d = {
+            "key1": "val1",
+            "key2": {
+                "subkey1": "subval1",
+                "subkey2": "subval2"
+            },
+            "key3": "val3"
+        }
+        required_keys = set()
+        self.assertEqual(find_suitable_keys(d, required_keys), [])
+
+    def test_empty_dict(self):
+        d = {}
+        required_keys = set()
+        self.assertEqual(find_suitable_keys(d, required_keys), [])
 
 
 class TestProcessValue(TestCase):
@@ -131,7 +147,6 @@ class TestProcessValue(TestCase):
         process_value(key='key1', value='boom home house home',
                       tokens=["home"],
                       callback=lambda key, token: result.append((key, token)))
-        print(expected, result)
         self.assertEqual(expected, result)
 
         expected = [('key1', 'home')]
@@ -139,7 +154,6 @@ class TestProcessValue(TestCase):
         process_value(key='key1', value='boom hOme house home',
                       tokens=["home"],
                       callback=lambda key, token: result.append((key, token)))
-        print(expected, result)
         self.assertEqual(expected, result)
 
     def test_not_string(self):
@@ -209,3 +223,12 @@ class TestPocessJson(TestCase):
         process_json(json_str, required_keys, tokens,
                      callback=lambda key, token: result.append((key, token)))
         self.assertEqual(expected, result)
+
+    def test_no_params(self):
+        json_str = '{"key1": "Word1 word2", "key2": "word2 word3"}'
+        with self.assertRaises(ValueError):
+            process_json(json_str)
+        with self.assertRaises(ValueError):
+            process_json(json_str, required_keys=["key1"])
+        with self.assertRaises(ValueError):
+            process_json(json_str, required_keys=["key1"], tokens=["word1"])
