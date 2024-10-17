@@ -1,5 +1,10 @@
 from collections import abc
 
+
+class EmptyException(BaseException):
+    pass
+
+
 class MyDict(dict):
     def move_elem_to_end(self, key):
         val = self[key]
@@ -10,7 +15,8 @@ class MyDict(dict):
         if len(self) > 0:
             del self[next(iter(self))]
         else:
-            raise Exception('dict is empty, can\'t remove first elem')
+            raise EmptyException('dict is empty, can\'t remove first elem')
+
 
 # LRU - Last Recently Used
 class LRUCache:

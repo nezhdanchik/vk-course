@@ -1,4 +1,3 @@
-from functools import cache
 from random import random
 from time import perf_counter
 import numpy as np
@@ -21,13 +20,14 @@ def test_exceed_limit():
     cache.set("k1", "val1")
     cache.set("k2", "val2")
 
-    _, __ = cache['k2'], cache['k1']
+    _, _ = cache['k2'], cache['k1']
 
     cache.set("k3", "val3")
 
     assert cache.get("k3") == "val3"
     assert cache.get("k2") is None
     assert cache.get("k1") == "val1"
+
 
 def test_get():
     cache = LRUCache(3)
@@ -47,11 +47,12 @@ def test_set():
     with pytest.raises(TypeError):
         cache[{1: 2}] = 'val3'
 
+
 def test_bad_limit():
     with pytest.raises(ValueError):
-        cache = LRUCache(0)
+        LRUCache(0)
     with pytest.raises(ValueError):
-        cache = LRUCache(-10)
+        LRUCache(-10)
 
 
 def test_not_existing_key():
@@ -80,10 +81,11 @@ def test_stress_time():
     O(1), то выполнение n раз подряд этих операций должно занимать
     примерно O(n).
     '''
-    quantities = list(np.linspace(10**3, 10**6, 20, dtype=int))
+    quantities = list(np.linspace(10 ** 3, 10 ** 6, 20, dtype=int))
     times = [stress_time(quantity) for quantity in quantities]
     print()
     rates = []
+    # pylint: disable=C0200
     for i in range(len(quantities)):
         rates.append(quantities[i] / times[i])
 
