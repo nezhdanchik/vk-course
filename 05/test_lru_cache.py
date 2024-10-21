@@ -28,6 +28,10 @@ def test_exceed_limit():
     assert cache.get("k2") is None
     assert cache.get("k1") == "val1"
 
+    cache.set('k4', 'val4')
+    assert cache.get('k3') is None
+    assert cache.get('k4') == 'val4'
+
 
 def test_get():
     cache = LRUCache(3)
@@ -43,9 +47,8 @@ def test_set():
     cache["k1"] = "val1"
     cache['k1'] = 'val2'
     assert cache['k1'] == 'val2'
-
-    with pytest.raises(TypeError):
-        cache[{1: 2}] = 'val3'
+    cache['k2'] = 'val_k2'
+    assert cache['k2'] == 'val_k2'
 
 
 def test_bad_limit():
@@ -58,6 +61,12 @@ def test_bad_limit():
 def test_not_existing_key():
     cache = LRUCache()
     assert cache[1] is None
+
+
+def test_not_hashable():
+    cache = LRUCache()
+    with pytest.raises(TypeError):
+        cache.set({1: 2}, 'value')
 
 
 def stress_time(quantity, limit=100):
@@ -81,7 +90,7 @@ def test_stress_time():
     O(1), то выполнение n раз подряд этих операций должно занимать
     примерно O(n).
     '''
-    quantities = list(np.linspace(10 ** 3, 10 ** 6, 20, dtype=int))
+    quantities = list(np.linspace(10 ** 3, 10 ** 6, 30, dtype=int))
     times = [stress_time(quantity) for quantity in quantities]
     print()
     rates = []

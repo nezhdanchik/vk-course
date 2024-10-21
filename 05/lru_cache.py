@@ -30,14 +30,14 @@ class LRUCache:
         return tuple(self._data.keys())
 
     def get(self, key):
-        if not isinstance(key, abc.Hashable):
-            raise TypeError('Key must be hashable')
         if key not in self._data:
             return None
         self._data.move_elem_to_end(key)
         return self._data[key]
 
     def set(self, key, value):
+        if not isinstance(key, abc.Hashable):
+            raise TypeError('Key must be hashable')
         if len(self._data) == self.limit:
             self._data.remove_first_elem()
         self._data[key] = value
