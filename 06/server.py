@@ -56,9 +56,11 @@ class Server:
                 urs_queue.put(url)
                 return
             result[url] = self.find_most_common_words(url, k, case_sensitive)
-            print(f'обработано {len(result)} url\'ов для клиента {connection.getpeername()}')
+            print(f'обработано {len(result)} '
+                  f'url\'ов для клиента {connection.getpeername()}')
 
-    def process_urls(self, urls: Iterable[str], connection: socket.socket) -> str:
+    def process_urls(self, urls: Iterable[str],
+                     connection: socket.socket) -> str:
         """
         :param connection: объект соединения с клиентом
         :param urls: url'ы, для которых нужно получить словарь частотности
@@ -109,6 +111,7 @@ class Server:
     def __del__(self):
         print(f'server {self} stopped')
         self.socket.close()
+
 
 if __name__ == '__main__':
     # python server.py -w 10 -k 7

@@ -4,6 +4,7 @@ import pytest
 from client import Client
 import socket
 
+
 def test_read_urls():
     client = Client('localhost', 5000, 10, 'test_urls.txt')
     assert client.urls_list == ['https://www.google.com',
@@ -41,8 +42,10 @@ def test_separate():
         '7\n8\n9',
     ]
 
+
 server_host = '127.0.0.1'
 server_port = 12345
+
 
 def run_base_server(result: list):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -60,5 +63,3 @@ def test_connect_server():
     Client.connect_server(client, server_host, server_port)
     t.join()
     assert result[0] is not None
-
-

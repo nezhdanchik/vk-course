@@ -6,17 +6,18 @@ import sys
 
 
 class Client:
+    # pylint: disable=C0103
     def __init__(self, target_host, targe_port, M, file_urls_name):
         self.target_host = target_host
         self.target_port = targe_port
-        self.M = M
+        self.M = M  # pylint: disable=C0103
         self.file_urls_path = file_urls_name
         self.urls_list = self.read_urls()
         print(self.urls_list)
 
     def read_urls(self):
         file_path = os.path.join(os.path.dirname(__file__), self.file_urls_path)
-        with open(file_path) as file:
+        with open(file_path, encoding='utf-8') as file:
             return [i.strip() for i in file]
 
     @staticmethod
@@ -40,6 +41,7 @@ class Client:
         print(json.dumps(processed, indent=4))
 
     @staticmethod
+    # pylint: disable=C0103
     def separate(urls_list, M) -> list[str]:
         part_size = len(urls_list) // M
         parts = [
@@ -64,9 +66,8 @@ class Client:
 
 
 if __name__ == '__main__':
-    #python client.py 10 urls.txt
-    M = int(sys.argv[1])
+    # python client.py 10 urls.txt
+    M_arg = int(sys.argv[1])
     file_name = sys.argv[2]
-    c = Client('127.0.0.1', 12345, M, file_name)
+    c = Client('127.0.0.1', 12345, M_arg, file_name)
     c.run()
-

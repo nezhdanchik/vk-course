@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
 
-
 url = 'https://en.wikipedia.org/wiki/Python_(programming_language)'
 base = 'https://en.wikipedia.org/'
+
 
 def parse_urls(size=100, skip=30):
     urls = set()
