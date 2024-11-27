@@ -1,17 +1,17 @@
 import cProfile, pstats, io
-from task1 import Point, PointSlots, PointWithWeakRef, test_point_class_speed
+from task1 import PersonDictAttrs, PersonSlots, PersonWithWeakRef, test_class_speed
 
-point_classes = Point, PointSlots, PointWithWeakRef
+classes = PersonDictAttrs, PersonSlots, PersonWithWeakRef
 
-for point_class in point_classes:
+for cls in classes:
     print(
         f'---------------------------------------------'
-        f' Профилирование класса {point_class.__name__} '
+        f' Профилирование класса {cls.__name__} '
         f'---------------------------------------------'
     )
     pr = cProfile.Profile()
     pr.enable()
-    test_point_class_speed(cls=point_class)
+    test_class_speed(cls=cls, count=10 ** 6 * 5)
     pr.disable()
 
     s = io.StringIO()

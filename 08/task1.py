@@ -1,43 +1,32 @@
 import weakref
 from time import perf_counter
+from abc import ABC
 
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
 
-    def __repr__(self):
-        return f'({self.x}, {self.y})'
-
-class PointSlots:
-    __slots__ = ['x', 'y', '__weakref__']
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+class Person(ABC):
+    def __init__(self, age):
+        self.age = age
 
     def __repr__(self):
-        return f'({self.x}, {self.y})'
+        return f'{self.age}'
 
-class PointWithWeakRef:
-    def __init__(self, x, y):
-        self.ref_x = weakref.ref(x)
-        self.ref_y = weakref.ref(y)
+
+class PersonDictAttrs(Person):
+    ...
+
+
+class PersonSlots(Person):
+    __slots__ = ('age',)
+
+
+class PersonWithWeakRef(Person):
+    def __init__(self, age):
+        self.ref_age = weakref.ref(age)
 
     @property
-    def x(self):
-        return self.ref_x().value
+    def age(self):
+        return self.ref_age()
 
-    @x.setter
-    def x(self, value):
-        self.ref_x().value = value
-
-    @property
-    def y(self):
-        return self.ref_y().value
-
-    @y.setter
-    def y(self, value):
-        self.ref_y().value = value
 
 def timer(func):
     def inner(*args, **kwargs):
@@ -45,7 +34,9 @@ def timer(func):
         result = func(*args, **kwargs)
         print(f'Для {func.__name__} сработало за {perf_counter() - start:.6f}')
         return result
+
     return inner
+
 
 @timer
 def create_bunch(n, cls, *args):
@@ -53,34 +44,35 @@ def create_bunch(n, cls, *args):
     print(f'Создано {n} объектов {cls.__name__}{args}')
     return res
 
+
 @timer
 def read_update_bunch(bunch):
     for obj in bunch:
-        a = obj.x
-        b = obj.y
-        obj.x += 1
-        obj.y += 1
+        _ = obj.age
+        obj.age.change(5)
+
 
 class IntWrapper:
     __slots__ = ('value', '__weakref__')
+
     def __init__(self, value):
         self.value = value
 
-    def __add__(self, other):
-        if isinstance(other, int):
-            return IntWrapper(self.value + other)
-        return IntWrapper(self.value + other.value)
+    def change(self, value):
+        self.value = value
 
     def __repr__(self):
         return str(self.value)
 
-def test_point_class_speed(cls, count_points= 10**6):
-    print(f'------------Тестирование {cls.__name__=}--------------------')
+
+def test_class_speed(cls, count=10 ** 6):
+    print(f'Тестирование {cls.__name__=}'.center(80, '-'))
     one = IntWrapper(1)
-    points = create_bunch(count_points, cls, one, one)
-    read_update_bunch(points)
-    print('-------------------------------------------------------------')
+    persons = create_bunch(count, cls, one)
+    read_update_bunch(persons)
+    print('-' * 80)
+
 
 if __name__ == '__main__':
-    for point_cls in Point, PointSlots, PointWithWeakRef:
-        test_point_class_speed(point_cls)
+    for cls in PersonDictAttrs, PersonSlots, PersonWithWeakRef:
+        test_class_speed(cls, count=10**6*5)
