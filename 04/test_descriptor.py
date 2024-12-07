@@ -101,7 +101,7 @@ def test_phone():
 
 
 def test_many_fields():
-    class Person:
+    class Person:  # pylint: disable=too-few-public-methods
         own_age = PositiveInteger(strong=True)
         child_age = PositiveInteger(strong=False)
 
@@ -115,7 +115,7 @@ def test_many_fields():
 
 
 def test_change_from_valid_to_invalid():
-    class Person:
+    class Person:  # pylint: disable=too-few-public-methods
         age = PositiveInteger(strong=False)
         number = PnoneNumberRussia()
 
