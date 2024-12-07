@@ -41,6 +41,7 @@ class LRUCache:
         if len(self._data) == self.limit:
             self._data.remove_first_elem()
         self._data[key] = value
+        self._data.move_elem_to_end(key)
 
     def __getitem__(self, item):
         return self.get(item)

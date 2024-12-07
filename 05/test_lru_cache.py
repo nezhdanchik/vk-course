@@ -104,3 +104,39 @@ def test_stress_time():
     threshold = 0.15 * mean_rate
     print(f'{mean_rate=}, {std_rate=}, {threshold=}')
     assert std_rate < threshold
+
+
+def test_limit_1():
+    cache = LRUCache(1)
+    cache.set('k1', 'val1')
+    cache.set('k2', 'val2')
+    assert cache.get('k1') is None
+    assert cache.get('k2') == 'val2'
+    cache.set('k3', 'val3')
+    assert cache.get('k2') is None
+    assert cache.get('k3') == 'val3'
+    cache.set('k4', 'val4')
+    assert cache.get('k3') is None
+    assert cache.get('k4') == 'val4'
+    assert cache.get('k2') is None
+    assert cache.get('k1') is None
+
+
+def test_change_exists():
+    cache = LRUCache(5)
+    cache.set('k1', 'val1')
+    cache.set('k2', 'val2')
+
+    cache.set('k1', 'val3')
+    assert cache.get_data_keys() == ('k2', 'k1')
+
+
+def test_change_exists_with_limit():
+    cache = LRUCache(2)
+    cache.set('k1', 'val1')
+    cache.set('k2', 'val2')
+    cache.set('k1', 'val12')
+    cache.set('k3', 'val3')
+    assert cache.get('k1') == 'val12'
+    assert cache.get('k2') is None
+    assert cache.get('k3') == 'val3'
