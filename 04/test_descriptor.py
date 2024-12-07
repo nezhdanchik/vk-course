@@ -98,3 +98,36 @@ def test_phone():
 
     with pytest.raises(ValueError):
         p = Person('8(123)456-78-90')
+
+
+def test_many_fields():
+    class Person:
+        own_age = PositiveInteger(strong=True)
+        child_age = PositiveInteger(strong=False)
+
+        def __init__(self, own_age, child_age):
+            self.own_age = own_age
+            self.child_age = child_age
+
+    p = Person(40, 10)
+    assert p.own_age == 40
+    assert p.child_age == 10
+
+
+def test_change_from_valid_to_invalid():
+    class Person:
+        age = PositiveInteger(strong=False)
+        number = PnoneNumberRussia()
+
+        def __init__(self, age, number):
+            self.age = age
+            self.number = number
+
+    p = Person(10, '+7(123)456-78-90')
+    assert p.age == 10
+    p.age = -10
+    assert p.age == 0
+    assert p.number == '+7(123)456-78-90'
+    with pytest.raises(ValueError):
+        p.number = '+7-123-456-78-90'
+    assert p.number == '+7(123)456-78-90'
