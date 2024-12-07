@@ -1,50 +1,64 @@
-import os
-import sys
+import argparse
 import asyncio
 import aiohttp
+from bs4 import BeautifulSoup
+import os
 
 
 class URLDispatcher:
-    def __init__(self, part_size, file_name):
-        self.part_size = part_size
+    def __init__(self, count, file_name):
+        self.count = count
         self.file_name = file_name
-        self.parts = self.create_parts(self.read_urls())
+        self.sem = asyncio.Semaphore(count)
+        self.url_generator = self.get_url_generator()
 
-    def create_parts(self, urls):
-        parts = []
-        current = []
-        for url in urls:
-            current.append(url)
-            if len(current) == self.part_size:
-                parts.append(current)
-                current = []
-        if current:
-            parts.append(current)
-        return parts
-
-    def read_urls(self):
+    def get_url_generator(self):
         file_path = os.path.join(os.path.dirname(__file__), self.file_name)
         with open(file_path) as file:
-            return [i.strip() for i in file]
+            for url in file:
+                yield url.strip()
 
-    @staticmethod
-    async def fetch_url(url, session):
-        async with session.get(url) as response:
-            return response.status
+    async def get_title(self, url: str, session):
+        async with self.sem:
+            async with session.get(url) as response:
+                content = await response.read()
+                soup = BeautifulSoup(content, 'html.parser')
+                return soup.title.text
+
+    async def fetch_all(self):
+        async with aiohttp.ClientSession() as session:
+            result = await asyncio.gather(
+                *[self.get_title(url, session) for url in self.url_generator])
+            return result
 
     async def main(self):
-        async with aiohttp.ClientSession() as session:
-            coroutines = [self.fetch_url(url, session) for url in self.parts]
-            result = await asyncio.gather(*coroutines)
-            print(result)
+        return await self.fetch_all()
+
+
+class ParseURLDispatcherArgs:
+    @staticmethod
+    def parse(string: str | None = None):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('count', nargs='?', type=int)
+        parser.add_argument('-c', type=int)
+        parser.add_argument('file', type=str)
+        try:
+            if string:
+                args = parser.parse_args(string.split())
+            else:
+                args = parser.parse_args()
+        except SystemExit:
+            raise ValueError('Неправильные аргументы при запуске')
+
+        count_arg = args.c if args.c else args.count
+        file_arg = args.file
+        if not count_arg or not file_arg:
+            raise ValueError('Неправильные аргументы при запуске')
+        print(count_arg, file_arg)
+        return count_arg, file_arg
 
 
 if __name__ == '__main__':
     # python fetcher.py -c 10 urls.txt | python fetcher.py 10 urls.txt
-    if '-c' in sys.argv:
-        part_size_arg = sys.argv.index('-c') + 1
-    else:
-        part_size_arg = sys.argv[2]
-    file_name_arg = sys.argv[-1]
-    dispatcher = URLDispatcher(part_size_arg, file_name_arg)
-    asyncio.run(dispatcher.main())
+    u = URLDispatcher(*ParseURLDispatcherArgs.parse())
+    print(asyncio.run(u.main()))
