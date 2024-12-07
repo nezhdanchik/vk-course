@@ -1,8 +1,8 @@
+import json
 import os
 import socket
-import json
-import threading
 import sys
+import threading
 
 
 class Client:
@@ -17,7 +17,7 @@ class Client:
 
     def read_urls(self):
         file_path = os.path.join(os.path.dirname(__file__), self.file_urls_path)
-        with open(file_path, encoding='utf-8') as file:
+        with open(file_path, encoding="utf-8") as file:
             return [i.strip() for i in file]
 
     @staticmethod
@@ -45,19 +45,17 @@ class Client:
     def separate(urls_list, M) -> list[str]:
         part_size = len(urls_list) // M
         parts = [
-            urls_list[part_size * i:  part_size * (i + 1)]
-            for i in range(M)
+            urls_list[part_size * i: part_size * (i + 1)] for i in range(M)
         ]
         remains_count = len(urls_list) % M
         remains = urls_list[-remains_count:] if remains_count != 0 else []
         parts[-1] += remains
-        return ['\n'.join(p) for p in parts]
+        return ["\n".join(p) for p in parts]
 
     def run(self):
         parts = self.separate(self.urls_list, self.M)
         threads = [
-            threading.Thread(target=self.worker, args=(p,))
-            for p in parts
+            threading.Thread(target=self.worker, args=(p,)) for p in parts
         ]
         for th in threads:
             th.start()
@@ -65,9 +63,9 @@ class Client:
             th.join()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # python client.py 10 urls.txt
     M_arg = int(sys.argv[1])
     file_name = sys.argv[2]
-    c = Client('127.0.0.1', 12345, M_arg, file_name)
+    c = Client("127.0.0.1", 12345, M_arg, file_name)
     c.run()
