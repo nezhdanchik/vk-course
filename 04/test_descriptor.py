@@ -118,12 +118,14 @@ def test_change_from_valid_to_invalid():
     class Person:  # pylint: disable=too-few-public-methods
         age = PositiveInteger(strong=False)
         number = PnoneNumberRussia()
+        name = Name(max_length=10)
 
-        def __init__(self, age, number):
+        def __init__(self, age, number, name):
             self.age = age
             self.number = number
+            self.name = name
 
-    p = Person(10, '+7(123)456-78-90')
+    p = Person(10, '+7(123)456-78-90', 'danya')
     assert p.age == 10
     p.age = -10
     assert p.age == 0
@@ -131,3 +133,12 @@ def test_change_from_valid_to_invalid():
     with pytest.raises(ValueError):
         p.number = '+7-123-456-78-90'
     assert p.number == '+7(123)456-78-90'
+
+    with pytest.raises(ValueError):
+        p.name = ''
+    with pytest.raises(ValueError):
+        p.name = '!'
+    with pytest.raises(ValueError):
+        p.name = 'd' * 11
+
+    assert p.name == 'danya'
